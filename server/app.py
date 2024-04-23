@@ -1,4 +1,5 @@
 from functools import wraps
+import os
 from flask import Flask, jsonify, make_response, redirect, request, url_for
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -9,7 +10,16 @@ from endpoints.admin_api import admin
 from endpoints.auth_api import login, logout
 
 
-app = Flask(__name__)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DATABASE_URI = os.getenv("DATABASE_URI")
+
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/dist',
+    template_folder='../client/dist'
+)
+
 CORS(app, origins='*')  # Enable CORS with credentials support
 
 @app.before_request
@@ -22,7 +32,7 @@ def before_request():
         return response
     
     
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI #"sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.json.compact = False
 
