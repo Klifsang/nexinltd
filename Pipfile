@@ -19,6 +19,7 @@ markupsafe = "==2.1.5"
 sqlalchemy = "==2.0.29"
 typing-extensions = "==4.11.0"
 werkzeug = "==3.0.2"
+flask-cors = "*"
 
 [dev-packages]
 
