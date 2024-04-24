@@ -11,7 +11,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install the Python dependencies
-RUN pipenv install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Copy the rest of the application code into the container
 COPY . .
@@ -25,8 +25,7 @@ RUN npm run build
 WORKDIR /app/server
 
 # Install Gunicorn
-RUN pipenv install gunicorn
-RUN pipenv shell
+RUN pip install gunicorn
 
 # Expose the Flask port
 EXPOSE 5000
