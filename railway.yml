@@ -1,7 +1,0 @@
-services:
-  # Specify the name of your service
-  web:
-    # Specify the Dockerfile to use for this service
-    dockerfile: Dockerfile
-    # Specify the port to expose
-    port: 5000
