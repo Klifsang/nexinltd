@@ -2,6 +2,7 @@ from functools import wraps
 import os
 from flask import Flask, jsonify, make_response, redirect, request, url_for
 from flask_cors import CORS
+from dotenv import load_dotenv
 from flask_migrate import Migrate
 from databaseconfig import db
 from endpoints.client_api import clients
@@ -10,8 +11,7 @@ from endpoints.admin_api import admin
 from endpoints.auth_api import login, logout
 
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DATABASE_URI = os.getenv("DATABASE_URI")
+load_dotenv()
 
 app = Flask(
     __name__,
@@ -19,8 +19,17 @@ app = Flask(
     static_folder='../client/dist',
     template_folder='../client/dist'
 )
-
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DATABASE_URI = os.getenv("DATABASE_URI")
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI #"sqlite:///app.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.json.compact = False
 CORS(app, origins='*')  # Enable CORS with credentials support
+
+migrate = Migrate(app, db)
+
+db.init_app(app)
+
 
 @app.before_request
 def before_request():
@@ -32,14 +41,6 @@ def before_request():
         return response
     
     
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI #"sqlite:///app.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.json.compact = False
-
-migrate = Migrate(app, db)
-
-db.init_app(app)
-
 
 # Dummy user data
 users = {
@@ -77,5 +78,5 @@ app.add_url_rule('/clients', 'clients', clients, methods=['GET', 'POST', 'PATCH'
 app.add_url_rule('/tickets', 'tickets', tickets, methods=['GET', 'POST', 'DELETE', 'PATCH'])
 
 
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+# if __name__ == '__main__':
+#     app.run(port=5555, debug=True)
