@@ -21,11 +21,14 @@ WORKDIR /app/client
 RUN npm install
 RUN npm run build
 
-# Set the working directory back to the Flask app
-WORKDIR /app
+# Set the working directory to the Flask app
+WORKDIR /app/server
+
+# Set the FLASK_APP environment variable
+ENV FLASK_APP=app.py
 
 # Expose the Flask port
 EXPOSE 5000
 
-# Command to run the Flask application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "server.app:app"]
+# Command to run the Flask application using Flask's development server
+CMD ["flask", "run", "--host", "0.0.0.0"]
